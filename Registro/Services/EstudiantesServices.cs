@@ -6,9 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Registro.Services;
 
-public class EstudiantesServices{
+public class EstudiantesServices(IDbContextFactory<Contexto> contextFactory){
 
-private readonly IDbContextFactory<Contexto> contextFactory;
 
     private async Task<bool> Existe(int estudianteId)
     {
@@ -47,10 +46,12 @@ private readonly IDbContextFactory<Contexto> contextFactory;
 
     }
 
-    public async Task<Estudiante?> Buscar(int estudianteid)
+   public async Task<Estudiante?> Buscar(int estudianteId)
     {
-        await using var contexto = await contextFactory.CreateDbContextAsync();
-        return contexto.Estudiantes.Include(I => I.EstudianteId).Include(I=> I.Nombre).FirstOrDefault(I => I.EstudianteId == estudianteid);
+         await using var Contexto = await contextFactory.CreateDbContextAsync();
+      
+        return await Contexto.Estudiantes.AsNoTracking().FirstOrDefaultAsync(d=> d.EstudianteId == estudianteId);
+        
     }
 
     public async Task<bool> Eliminar(int estudianteId)

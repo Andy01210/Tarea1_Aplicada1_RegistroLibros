@@ -1,17 +1,17 @@
-@page "/libros"
+@page "/Estudiantes"
 @rendermode InteractiveServer
 
-@inject LibroService LibroService
+@inject EstudiantesServices EstudiantesServices
 @inject NavigationManager Navigation
 
-<PageTitle>Biblioteca</PageTitle>
+<PageTitle>Registro de Estudiantes</PageTitle>
 
 <div class="container">
 
     @* Header *@
     <div class="card-header">
         <div class="card-title">
-            <h3>Consulta de Libros</h3>
+            <h3>Consultar Estudiantes</h3>
         </div>
     </div>
 
@@ -51,17 +51,21 @@
                         Id
                     </option>
 
-                    <option value="Titulo">
-                        Título
+                    <option value="Nombre">
+                        Nombre
                     </option>
 
-                    <option value="Autor">
-                        Autor
+                    <option value="Direccion">
+                        Direccion
                     </option>
 
-                    <option value="AnoPublicacion">
-                        AnoPublicacion
+                    <option value="Email">
+                        Email
                     </option>
+                    <option value="Fecha de nacimiento">
+                        FechaDeNacimiento
+                    </option>
+
 
                 </select>
 
@@ -109,10 +113,11 @@
             <thead>
 
                 <tr>
-                    <th>LibroId</th>
-                    <th>Título</th>
-                    <th>Autor</th>
-                    <th>Año de Publicación</th>
+                    <th>EstudianteId</th>
+                    <th>Nombre</th>
+                    <th>Direccion</th>
+                    <th>Email</th>
+                    <th>Fecha de nacimiento</th>
                     <th>Acciones</th>
                 </tr>
 
@@ -120,31 +125,35 @@
 
             <tbody>
 
-                @foreach (var libro in ListaLibros)
+                @foreach (var Estudiante in ListaEstudiantes)
                 {
                     <tr>
 
                         <td>
-                            @libro.LibroId
+                            @Estudiante.EstudianteId
                         </td>
 
                         <td>
-                            @libro.Titulo
+                            @Estudiante.Nombre
                         </td>
 
                         <td>
-                            @libro.Autor
+                            @Estudiante.Direccion
                         </td>
 
                         <td>
-                            @libro.AnoPublicacion
+                            @Estudiante.Email
+                        </td>
+                        
+                        <td>
+                            @Estudiante.FechaDeNacimiento
                         </td>
 
                         <td>
 
                             <button type="button"
                                     class="btn btn-outline-warning"
-                                    @onclick="() => MostrarPantallaEditar(libro.LibroId)">
+                                    @onclick="() => MostrarPantallaEditar(Estudiante.EstudianteId)">
 
                                 Editar
 
@@ -152,7 +161,7 @@
 
                             <button type="button"
                                     class="btn btn-outline-danger"
-                                    @onclick="() => MostrarPantallaEliminar(libro.LibroId)">
+                                    @onclick="() => MostrarPantallaEliminar(Estudiante.EstudianteId)">
 
                                 Eliminar
 
@@ -168,21 +177,21 @@
         </table>
 
         <p>
-            <strong>Cantidad:</strong> @ListaLibros.Count
+            <strong>Cantidad:</strong> @ListaEstudiantes.Count
         </p>
 
     </div>
 
 </div>
 
-@* Crear libro *@
+@* Crear Estudiante *@
 <div class="container mt-3">
 
     <button type="button"
             class="btn btn-primary"
             @onclick="MostrarPantallaCrear">
 
-        Crear Libro
+        Crear Estudiante
 
     </button>
 
@@ -191,7 +200,7 @@
 
 @code
 {
-    public List<Registro.Models.Libro> ListaLibros { get; set; } = [];
+    public List<Registro.Models.Estudiante> ListaEstudiantes { get; set; } = [];
 
     public string? filtro { get; set; }
 
@@ -200,7 +209,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListaLibros = await LibroService.ObtenerTodos();
+        ListaEstudiantes = await EstudiantesServices.Listar();
     }
 
 
@@ -209,64 +218,72 @@
         if (!string.IsNullOrWhiteSpace(valorFiltro))
         {
             if (filtro == "Id" &&
-                int.TryParse(valorFiltro, out int libroId))
+                int.TryParse(valorFiltro, out int EstudianteId))
             {
-                var libro = await LibroService.Buscar(libroId);
+                var estudiante = await EstudiantesServices.Buscar(EstudianteId);
 
-                if (libro != null)
+                if (estudiante != null)
                 {
-                    ListaLibros = [libro];
+                    ListaEstudiantes = [estudiante];
                 }
                 else
                 {
-                    ListaLibros = [];
+                    ListaEstudiantes = [];
                 }
             }
 
-            else if (filtro == "Titulo")
+            else if (filtro == "Nombre")
             {
-                ListaLibros = (await LibroService.ObtenerTodos())
-                    .Where(l => l.Titulo.ToLower()
+                ListaEstudiantes = (await EstudiantesServices.Listar())
+                    .Where(l => l.Nombre.ToLower()
                     .Contains(valorFiltro.ToLower()))
                     .ToList();
             }
 
-            else if (filtro == "Autor")
+            else if (filtro == "Direccion")
             {
-                ListaLibros = (await LibroService.ObtenerTodos())
-                    .Where(l => l.Autor.ToLower()
+                ListaEstudiantes = (await EstudiantesServices.Listar())
+                    .Where(l => l.Direccion.ToLower()
                     .Contains(valorFiltro.ToLower()))
                     .ToList();
             }
 
-            else if (filtro == "AnoPublicacion")
+            else if (filtro == "Email")
             {
-                ListaLibros = (await LibroService.ObtenerTodos())
-                    .Where(l => l.AnoPublicacion.ToString()
+                ListaEstudiantes = (await EstudiantesServices.Listar())
+                    .Where(l => l.Email.ToLower()
+                    .Contains(valorFiltro))
+                    .ToList();
+            }
+            else if (filtro == "Fecha de nacimiento")
+            {
+                ListaEstudiantes = (await EstudiantesServices.Listar())
+                    .Where(l => l.FechaDeNacimiento.ToString()
                     .Contains(valorFiltro))
                     .ToList();
             }
 
             else
             {
-                ListaLibros = (await LibroService.ObtenerTodos())
+                ListaEstudiantes = (await  EstudiantesServices.Listar())
                     .Where(l =>
-                        l.Titulo.ToLower().Contains(valorFiltro.ToLower()) ||
-                        l.Autor.ToLower().Contains(valorFiltro.ToLower()) ||
-                        l.AnoPublicacion.ToString().Contains(valorFiltro))
+                        l.Nombre.ToLower().Contains(valorFiltro.ToLower()) ||
+                        l.Direccion.ToLower().Contains(valorFiltro.ToLower()) ||
+                        l.Email.ToString().Contains(valorFiltro)||
+                         l.FechaDeNacimiento.ToString().Contains(valorFiltro))
                     .ToList();
             }
         }
         else
         {
-            ListaLibros = await LibroService.ObtenerTodos();
+            ListaEstudiantes = await EstudiantesServices.Listar();
         }
     }
 
 
     private async Task Restablecer()
     {
-        ListaLibros = await LibroService.ObtenerTodos();
+        ListaEstudiantes = await EstudiantesServices.Listar();
 
         filtro = string.Empty;
 
@@ -276,18 +293,18 @@
 
     public void MostrarPantallaCrear()
     {
-        Navigation.NavigateTo("/crear-libro");
+        Navigation.NavigateTo("/crear-estudiante");
     }
 
 
     public void MostrarPantallaEditar(int id)
     {
-        Navigation.NavigateTo($"/editar-libro/{id}");
+        Navigation.NavigateTo($"/editar-estudiante/{id}");
     }
 
 
     public void MostrarPantallaEliminar(int id)
     {
-        Navigation.NavigateTo($"/editar-libro/{id}");
+        Navigation.NavigateTo($"/editar-estudiante/{id}");
     }
 }

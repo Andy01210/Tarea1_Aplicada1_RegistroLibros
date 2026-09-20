@@ -17,6 +17,6 @@ public class Estudiante{
     public string Email{get; set;}
 
     [Required (ErrorMessage="Fecha de nacimiento debe ser obligatoria")]
-    public DateTime FechaDeNacimiento{get; set;}
+    public DateOnly FechaDeNacimiento{get; set;}
 
 }
