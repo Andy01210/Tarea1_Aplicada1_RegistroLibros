@@ -1,0 +1,310 @@
+@page "/Estudiantes"
+@rendermode InteractiveServer
+
+@inject EstudiantesServices EstudiantesServices
+@inject NavigationManager Navigation
+
+<PageTitle>Registro de Estudiantes</PageTitle>
+
+<div class="container">
+
+    @* Header *@
+    <div class="card-header">
+        <div class="card-title">
+            <h3>Consultar Estudiantes</h3>
+        </div>
+    </div>
+
+    @* Body *@
+    <div class="card-body">
+
+        @* Labels *@
+        <div class="row">
+
+            <div class="col-3">
+                <label class="form-label" for="Filtro">
+                    <strong>Filtrar por</strong>
+                </label>
+            </div>
+
+            <div class="col-4">
+                <label class="form-label" for="valorFiltro">
+                    <strong>Búsqueda</strong>
+                </label>
+            </div>
+
+        </div>
+
+        @* Inputs y botones *@
+        <div class="row">
+
+            @* Filtro *@
+            <div class="col-3">
+
+                <select class="form-select" @bind="filtro">
+
+                    <option value="">
+                        Elija una opción
+                    </option>
+
+                    <option value="Id">
+                        Id
+                    </option>
+
+                    <option value="Nombre">
+                        Nombre
+                    </option>
+
+                    <option value="Direccion">
+                        Direccion
+                    </option>
+
+                    <option value="Email">
+                        Email
+                    </option>
+                    <option value="Fecha de nacimiento">
+                        FechaDeNacimiento
+                    </option>
+
+
+                </select>
+
+            </div>
+
+            @* Búsqueda *@
+            <div class="col-4">
+
+                <div class="input-group">
+
+                    <input class="form-control"
+                           @bind="valorFiltro"
+                           placeholder="Buscar" />
+
+                    <button type="button"
+                            class="btn btn-outline-primary"
+                            @onclick="Buscar">
+
+                        Buscar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            @* Restablecer *@
+            <div class="col-auto">
+
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        @onclick="Restablecer">
+
+                    Restablecer
+
+                </button>
+
+            </div>
+
+        </div>
+
+        @* Tabla *@
+        <table class="table table-bordered mt-3 text-center">
+
+            <thead>
+
+                <tr>
+                    <th>EstudianteId</th>
+                    <th>Nombre</th>
+                    <th>Direccion</th>
+                    <th>Email</th>
+                    <th>Fecha de nacimiento</th>
+                    <th>Acciones</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @foreach (var Estudiante in ListaEstudiantes)
+                {
+                    <tr>
+
+                        <td>
+                            @Estudiante.EstudianteId
+                        </td>
+
+                        <td>
+                            @Estudiante.Nombre
+                        </td>
+
+                        <td>
+                            @Estudiante.Direccion
+                        </td>
+
+                        <td>
+                            @Estudiante.Email
+                        </td>
+                        
+                        <td>
+                            @Estudiante.FechaDeNacimiento
+                        </td>
+
+                        <td>
+
+                            <button type="button"
+                                    class="btn btn-outline-warning"
+                                    @onclick="() => MostrarPantallaEditar(Estudiante.EstudianteId)">
+
+                                Editar
+
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-outline-danger"
+                                    @onclick="() => MostrarPantallaEliminar(Estudiante.EstudianteId)">
+
+                                Eliminar
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+        <p>
+            <strong>Cantidad:</strong> @ListaEstudiantes.Count
+        </p>
+
+    </div>
+
+</div>
+
+@* Crear Estudiante *@
+<div class="container mt-3">
+
+    <button type="button"
+            class="btn btn-primary"
+            @onclick="MostrarPantallaCrear">
+
+        Crear Estudiante
+
+    </button>
+
+</div>
+
+
+@code
+{
+    public List<Registro.Models.Estudiante> ListaEstudiantes { get; set; } = [];
+
+    public string? filtro { get; set; }
+
+    public string? valorFiltro { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaEstudiantes = await EstudiantesServices.Listar();
+    }
+
+
+    private async Task Buscar()
+    {
+        if (!string.IsNullOrWhiteSpace(valorFiltro))
+        {
+            if (filtro == "Id" &&
+                int.TryParse(valorFiltro, out int EstudianteId))
+            {
+                var estudiante = await EstudiantesServices.Buscar(EstudianteId);
+
+                if (estudiante != null)
+                {
+                    ListaEstudiantes = [estudiante];
+                }
+                else
+                {
+                    ListaEstudiantes = [];
+                }
+            }
+
+            else if (filtro == "Nombre")
+            {
+                ListaEstudiantes = (await EstudiantesServices.Listar())
+                    .Where(l => l.Nombre.ToLower()
+                    .Contains(valorFiltro.ToLower()))
+                    .ToList();
+            }
+
+            else if (filtro == "Direccion")
+            {
+                ListaEstudiantes = (await EstudiantesServices.Listar())
+                    .Where(l => l.Direccion.ToLower()
+                    .Contains(valorFiltro.ToLower()))
+                    .ToList();
+            }
+
+            else if (filtro == "Email")
+            {
+                ListaEstudiantes = (await EstudiantesServices.Listar())
+                    .Where(l => l.Email.ToLower()
+                    .Contains(valorFiltro))
+                    .ToList();
+            }
+            else if (filtro == "Fecha de nacimiento")
+            {
+                ListaEstudiantes = (await EstudiantesServices.Listar())
+                    .Where(l => l.FechaDeNacimiento.ToString()
+                    .Contains(valorFiltro))
+                    .ToList();
+            }
+
+            else
+            {
+                ListaEstudiantes = (await  EstudiantesServices.Listar())
+                    .Where(l =>
+                        l.Nombre.ToLower().Contains(valorFiltro.ToLower()) ||
+                        l.Direccion.ToLower().Contains(valorFiltro.ToLower()) ||
+                        l.Email.ToString().Contains(valorFiltro)||
+                         l.FechaDeNacimiento.ToString().Contains(valorFiltro))
+                    .ToList();
+            }
+        }
+        else
+        {
+            ListaEstudiantes = await EstudiantesServices.Listar();
+        }
+    }
+
+
+    private async Task Restablecer()
+    {
+        ListaEstudiantes = await EstudiantesServices.Listar();
+
+        filtro = string.Empty;
+
+        valorFiltro = string.Empty;
+    }
+
+
+    public void MostrarPantallaCrear()
+    {
+        Navigation.NavigateTo("/crear-estudiante");
+    }
+
+
+    public void MostrarPantallaEditar(int id)
+    {
+        Navigation.NavigateTo($"/editar-estudiante/{id}");
+    }
+
+
+    public void MostrarPantallaEliminar(int id)
+    {
+        Navigation.NavigateTo($"/editar-estudiante/{id}");
+    }
+}

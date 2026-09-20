@@ -1,0 +1,206 @@
+@page "/editar-estudiante/{EstudianteId:int}"
+@rendermode InteractiveServer
+
+@using Registro.Models
+
+@inject EstudiantesServices EstudiantesServices
+@inject NavigationManager Navigation
+
+<PageTitle>Editar Estudiante</PageTitle>
+
+<div class="container mt-4">
+
+    <div class="card">
+
+        @*Encabezado*@
+        <div class="card-header text-center">
+            <h3>Editar Estudiante</h3>
+        </div>
+
+        @*Formulario*@
+        <div class="card-body">
+
+            @*EstudianteId*@
+            <div class="mb-3">
+                <label class="form-label">
+                    EstudianteId
+                </label>
+
+                <input type="text"
+                       class="form-control"
+                       @bind="Estudiante.EstudianteId"
+                       disabled />
+            </div>
+
+            <!-- Nombre -->
+            <div class="mb-3">
+                <label class="form-label">
+                    Nombre
+                </label>
+
+                <input type="text"
+                       class="form-control"
+                       @bind="Estudiante.Nombre" />
+            </div>
+
+            @*Direccion*@
+            <div class="mb-3">
+                <label class="form-label">
+                    Direccion
+                </label>
+
+                <input type="text"
+                       class="form-control"
+                       @bind="Estudiante.Direccion" />
+            </div>
+
+            @*Email*@
+            <div class="mb-3">
+                <label class="form-label">
+                    Email
+                </label>
+
+                <input type="text"
+                       class="form-control"
+                       @bind="Estudiante.Email" />
+            </div>
+
+            @*FechaDeNacimiento*@
+            <div class = "mb-3">
+                <label class = "form-label">
+                    FechaDeNacimiento
+                </label>
+
+                <input type = "date"
+                 class = " form-control"
+                 @bind = "Estudiante.FechaDeNacimiento"/>
+                 </div>
+
+            @*Mensaje*@
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="alert alert-danger">
+                    @mensaje
+                </div>
+            }
+
+        </div>
+
+        @*Botones*@
+        <div class="card-footer">
+
+            <div class="d-flex justify-content-center gap-2">
+
+                @*Volver*@
+                <button type="button"
+                        class="btn btn-secondary"
+                        @onclick="Volver">
+                    Volver
+                </button>
+
+                @*Modificar*@
+                <button type="button"
+                        class="btn btn-primary"
+                        @onclick="Modificar">
+                    Modificar
+                </button>
+
+                @*Eliminar*@
+                <button type="button"
+                        class="btn btn-danger"
+                        @onclick="Eliminar">
+                    Eliminar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@code
+{
+    [Parameter]
+    public int EstudianteId { get; set; }
+
+    private Registro.Models.Estudiante Estudiante =
+        new Registro.Models.Estudiante();
+
+    private string mensaje = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        Registro.Models.Estudiante? resultado =
+            await EstudiantesServices.Buscar(EstudianteId);
+
+        if (resultado != null)
+        {
+            Estudiante = resultado;
+        }
+        else
+        {
+            mensaje = "No se encontró el estudiante.";
+        }
+    }
+
+    private async Task Modificar()
+    {
+        if (string.IsNullOrWhiteSpace(Estudiante.Nombre))
+        {
+            mensaje = "El nombre es obligatorio";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(Estudiante.Direccion))
+        {
+            mensaje = "La direccion es obligatoria";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(Estudiante.Email))
+        {
+            mensaje = "El Email debe ser obligatorio";
+            return;
+        }
+        if (Estudiante.FechaDeNacimiento == default)
+        {
+            mensaje = "La fecha debe ser obligatoria";
+            return;
+        }
+
+
+        bool resultado =
+            await EstudiantesServices.Modificar(Estudiante);
+
+        if (resultado)
+        {
+            Navigation.NavigateTo("/Estudiantes");
+        }
+        else
+        {
+            mensaje = "Error al modificar el Estudiante.";
+        }
+    }
+
+    private async Task Eliminar()
+    {
+        bool resultado =
+            await EstudiantesServices.Eliminar(EstudianteId);
+
+        if (resultado)
+        {
+            Navigation.NavigateTo("/Estudiantes");
+        }
+        else
+        {
+            mensaje = "Error al eliminar el estudainte.";
+        }
+    }
+
+    private void Volver()
+    {
+        Navigation.NavigateTo("/Estudiantes");
+    }
+}

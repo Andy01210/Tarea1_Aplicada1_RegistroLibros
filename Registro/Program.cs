@@ -3,11 +3,17 @@ using Registro.Context;
 using Microsoft.EntityFrameworkCore;
 using Registro.Services;
 
-var builder = WebApplication.CreateBuilder(args);
-var ConStr = builder.Configuration.GetConnectionString("ConStr");
-builder.Services.AddDbContextFactory<Contexto>(op => op.UseSqlite(ConStr));
 
+var builder = WebApplication.CreateBuilder(args);
+
+//inyeccion del context
+var ConStr = builder.Configuration.GetConnectionString("ConStr");
+builder.Services.AddDbContextFactory<Contexto> ( o => o.UseSqlServer(ConStr));
+
+
+//inyeccion del services
 builder.Services.AddScoped<LibroService>();
+builder.Services.AddScoped<EstudiantesServices>();
 
 
 

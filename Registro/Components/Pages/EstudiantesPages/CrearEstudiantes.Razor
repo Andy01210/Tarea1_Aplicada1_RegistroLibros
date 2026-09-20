@@ -1,0 +1,180 @@
+@page "/crear-Estudiante"
+
+@rendermode InteractiveServer
+
+@inject EstudiantesServices EstudiantesServices
+
+@inject NavigationManager Navigation
+
+<PageTitle>Crear Estudiante</PageTitle>
+
+<div class="container mt-4">
+
+    <div class="card">
+
+        @*Encabezado*@
+        <div class="card-header text-center">
+            <h3>Crear Estudiante</h3>
+        </div>
+
+        @*Formulario*@
+        <div class="card-body">
+
+            @*EstudianteId*@
+            <div class="mb-3">
+                <label class="form-label">
+                    EstudianteId
+                </label>
+
+                <input type="number"
+                       class="form-control"
+                       @bind="estudianteId" />
+            </div>
+
+            @*Nombre*@
+            <div class="mb-3">
+                <label class="form-label">
+                    Nombre
+                </label>
+
+                <input type="text"
+                       class="form-control"
+                       @bind="nombre" />
+            </div>
+
+            @*Direccion*@
+            <div class="mb-3">
+                <label class="form-label">
+                    Direccion
+                </label>
+
+                <input type="text"
+                       class="form-control"
+                       @bind="direccion" />
+            </div>
+
+            @*Email*@
+            <div class="mb-3">
+                <label class="form-label">
+                    Email
+                </label>
+
+                <input type="text"
+                       class="form-control"
+                       @bind="email" />
+            </div>
+
+             @*Fecha de nacimiento*@
+            <div class="mb-3">
+                <label class="form-label">
+                    FechaDeNacimiento
+                </label>
+
+                <input type="date"
+                       class="form-control"
+                       @bind="fechaDeNacimiento" />
+            </div>
+
+            @*Mensaje*@
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="alert alert-danger">
+                    @mensaje
+                </div>
+            }
+
+        </div>
+
+        @*Botones*@
+        <div class="card-footer">
+
+            <div class="d-flex justify-content-center gap-2">
+
+                @*Volver*@
+                <button type="button"
+                        class="btn btn-secondary"
+                        @onclick="Volver">
+                    Volver
+                </button>
+
+                @*Guardar*@
+                <button type="button"
+                        class="btn btn-primary"
+                        @onclick="Guardar">
+                    Guardar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@code
+{
+    private int estudianteId;
+
+    private string nombre = "";
+
+    private string direccion = "";
+
+    private string email = "";
+
+    private DateOnly fechaDeNacimiento;
+
+    private string mensaje = "";
+
+    private async Task Guardar()
+    {
+        if (string.IsNullOrWhiteSpace(nombre))
+        {
+            mensaje = "El nombre es obligatorio.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(direccion))
+        {
+            mensaje = "La direccion es obligatorio.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            mensaje = "El email es obligatorio.";
+            return;
+        }
+         if (fechaDeNacimiento == default)
+        {
+            mensaje = "La fecha debe ser obligatoria.";
+            return;
+        }
+
+        Registro.Models.Estudiante Estudiante =
+            new Registro.Models.Estudiante
+            {
+                Nombre = nombre,
+                Direccion = direccion,
+                Email = email,
+                FechaDeNacimiento = fechaDeNacimiento
+            };
+
+        bool resultado =
+            await EstudiantesServices.Guardar(Estudiante);
+
+        if (resultado)
+        {
+            Navigation.NavigateTo("/Estudiantes");
+        }
+        else
+        {
+            mensaje = "Error al guardar el estudiante. Intente nuevamente.";
+        }
+    }
+
+    private void Volver()
+    {
+        Navigation.NavigateTo("/Estudiantes");
+    }
+}
