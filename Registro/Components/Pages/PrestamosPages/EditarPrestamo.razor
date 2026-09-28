@@ -118,12 +118,9 @@
                 </button>
 
                  @*Eliminar*@
-                <button type="button"
-                        class="btn btn-danger"
-                        @onclick="Eliminar">
-                    Eliminar
-                </button>
-
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Eliminar
+                    </button>
             </div>
 
         </div>
@@ -132,12 +129,40 @@
 
 </div>
 
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Confirmar eliminación</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Está seguro de que desea eliminar este libro?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Volver
+                                    </button>
+                                    <button type="button" class="btn btn-danger" @onclick="Eliminar">
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
 @code
 {
-  private Prestamo prestamo{get; set;} = new Prestamo();
+    private Prestamo prestamo{get; set;} = new Prestamo();
 
-  [Parameter]
-  public int PrestamoId{get; set;}
+    [Parameter]
+    public int PrestamoId{get; set;}
     private List<Libro> ListaLibros = new List<Libro>();
     private List<Estudiante> ListaEstudiante = new List<Estudiante>();
 
@@ -145,12 +170,12 @@
 
 
     protected override async Task OnInitializedAsync(){
-       ListaLibros = await LibroServices.ObtenerTodos();
+        ListaLibros = await LibroServices.ObtenerTodos();
         ListaEstudiante = await EstudiantesServices.Listar();
 
 
-             Registro.Models.Prestamo? resultado =
-            await PrestamosServices.Buscar(PrestamoId);
+        Registro.Models.Prestamo? resultado =
+       await PrestamosServices.Buscar(PrestamoId);
 
         if (resultado != null)
         {
@@ -162,7 +187,7 @@
         }
     }
 
-    
+
     private async Task Modificar()
     {
         mensaje = "";
@@ -185,11 +210,11 @@
             return;
         }
         if(prestamo.FechaPrestamo > prestamo.Fechadevolucion){
-        mensaje = "La fecha del prestamo no puede ser mayor que la fecha de devolucion";
-        return;
+            mensaje = "La fecha del prestamo no puede ser mayor que la fecha de devolucion";
+            return;
 
         }
-    
+
         bool guardado= await PrestamosServices.Modificar(prestamo);
 
         if(guardado){
@@ -202,18 +227,20 @@
     private async Task Eliminar()
     {
         bool resultado =
-            await EstudiantesServices.Eliminar(PrestamoId);
+            await PrestamosServices.Eliminar(PrestamoId);
 
         if (resultado)
         {
+            mensaje = "Prestamo Eliminado";
             Navigation.NavigateTo("/Prestamos");
         }
         else
         {
-            mensaje = "Error al eliminar el estudainte.";
+            mensaje = "Error al eliminar el prestamo.";
         }
     }
-    
+
+  
     public void Volver()
     {
         Navigation.NavigateTo("/Prestamos");

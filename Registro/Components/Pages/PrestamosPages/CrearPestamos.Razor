@@ -171,8 +171,15 @@
         bool guardado= await PrestamosServices.Guardar(prestamo);
 
         if(guardado){
-            prestamo.Libro.Disponibilidad =false;
+          var libro =await  LibroServices.Buscar(prestamo.LibroId);
+
+          if(libro != null){
+            libro.Disponibilidad = false;
+            await LibroServices.Modificar(libro);
             Navigation.NavigateTo("/Prestamos");
+
+          }
+           
         }else{
             mensaje = "Ocurrio un error al guardar el prestamo";
         }
