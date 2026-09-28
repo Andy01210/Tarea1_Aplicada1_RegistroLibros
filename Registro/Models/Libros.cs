@@ -10,4 +10,6 @@ public string? Autor{get; set;}
 
 public int AnoPublicacion{get; set;}
 
+public bool Disponibilidad{get; set;} = true;
+
 }
