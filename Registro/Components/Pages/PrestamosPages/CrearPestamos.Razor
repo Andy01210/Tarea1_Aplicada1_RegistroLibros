@@ -1,0 +1,196 @@
+@page "/Crear-prestamos"
+
+@rendermode InteractiveServer
+
+@inject PrestamosServices PrestamosServices
+
+@inject LibroService LibroServices
+
+@inject EstudiantesServices EstudiantesServices
+
+@inject NavigationManager Navigation
+
+<PageTitle>Crear Prestamos</PageTitle>
+
+<div class="container mt-4">
+
+    <div class="card">
+
+        @*Encabezado*@
+        <div class="card-header text-center">
+            <h3>Crear Prestamo</h3>
+        </div>
+
+        @*Formulario*@
+        <div class="card-body">
+
+            @*PrestamoId*@
+            <div class="mb-3">
+                <label class="form-label">
+                    PrestamoId
+                </label>
+
+                <input type="number"
+                       class="form-control"
+                       @bind="prestamo.PrestamoId" />
+            </div>
+
+               @*Libro*@
+            <div class="mb-3">
+                <label class="form-label">
+                    Titulo Libro
+                </label>
+
+                <InputSelect class = "form-control" @bind-Value ="prestamo.LibroId" >
+                    <option value = "0" >Seleccione un libro</option>
+
+                    @foreach(Libro libro in ListaLibros){
+                            <option value ="@libro.LibroId">@libro.Titulo</option>
+                    }
+                </InputSelect>
+
+            </div>
+
+            @*Estudiante*@
+            <div class="mb-3">
+                <label class="form-label">
+                    Nombre Estudiante
+                </label>
+
+                <InputSelect class = "form-control" @bind-Value ="prestamo.EstudianteId" >
+                    <option value = "0" >Seleccione un Estudiante</option>
+
+                    @foreach(Estudiante estudiante in ListaEstudiante){
+                        <option value ="@estudiante.EstudianteId">@estudiante.Nombre</option>
+                    }
+                    </InputSelect>
+            </div>
+
+            @*fechaPrestamo*@
+            <div class="mb-3">
+                <label class="form-label">
+                    Fecha Prestamo
+                </label>
+
+                <input type="date"
+                       class="form-control"
+                       @bind="prestamo.FechaPrestamo" />
+            </div>
+
+                
+             @*fechaDevolucion*@
+            <div class="mb-3">
+                <label class="form-label">
+                    Fecha Devolcuion
+                </label>
+
+                <input type="date"
+                       class="form-control"
+                       @bind="prestamo.Fechadevolucion" />
+            </div>
+
+            @*Mensaje*@
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="alert alert-danger">
+                    @mensaje
+                </div>
+            }
+
+        </div>
+
+        @*Botones*@
+        <div class="card-footer">
+
+            <div class="d-flex justify-content-center gap-2">
+
+                @*Volver*@
+                <button type="button"
+                        class="btn btn-secondary"
+                        @onclick="Volver">
+                    Volver
+                </button>
+
+                @*Guardar*@
+                <button type="button"
+                        class="btn btn-primary"
+                        @onclick="Guardar">
+                    Guardar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@code
+{
+  private Prestamo prestamo{get; set;} = new Prestamo();
+    private List<Libro> ListaLibros = new List<Libro>();
+    private List<Estudiante> ListaEstudiante = new List<Estudiante>();
+
+    private string mensaje = "";
+
+
+    protected override async Task OnInitializedAsync(){
+        ListaLibros = await LibroServices.Listar(l=> l.Disponibilidad== true);
+        ListaEstudiante = await EstudiantesServices.Listar();
+    }
+
+    
+    private async Task Guardar()
+    {
+        mensaje = "";
+
+
+        if(prestamo.LibroId == 0){
+            mensaje = "No ha seleccionado ningun libro";
+            return;
+        }
+        if(prestamo.EstudianteId == 0){
+            mensaje = "No ha seleccionado un estudiane";
+            return;
+        }
+        if(prestamo.FechaPrestamo == default){
+            mensaje = "No ha ingresado ninguna fecha de prestamo";
+            return;
+        }
+        if(prestamo.Fechadevolucion == default){
+            mensaje = "No ha ingresado ninguna fecha e devolucion";
+            return;
+        }
+        if(prestamo.FechaPrestamo > prestamo.Fechadevolucion){
+        mensaje = "La fecha del prestamo no puede ser mayor que la fecha de devolucion";
+        return;
+
+        }
+    
+        bool guardado= await PrestamosServices.Guardar(prestamo);
+
+        if(guardado){
+          var libro =await  LibroServices.Buscar(prestamo.LibroId);
+
+          if(libro != null){
+            libro.Disponibilidad = false;
+            await LibroServices.Modificar(libro);
+            Navigation.NavigateTo("/Prestamos");
+
+          }
+           
+        }else{
+            mensaje = "Ocurrio un error al guardar el prestamo";
+        }
+    }
+    
+    public void Volver()
+    {
+        Navigation.NavigateTo("/Prestamos");
+    }
+}
+
+
+
+

@@ -1,9 +1,8 @@
 @page "/editar-libro/{LibroId:int}"
 @rendermode InteractiveServer
 
-@using Registro.Models
 
-@inject LibroService LibroService
+@inject LibroService LibrosServices
 @inject NavigationManager Navigation
 
 <PageTitle>Editar Libro</PageTitle>
@@ -122,7 +121,7 @@
     protected override async Task OnInitializedAsync()
     {
         Registro.Models.Libro? resultado =
-            await LibroService.Buscar(LibroId);
+            await LibrosServices.Buscar(LibroId);
 
         if (resultado != null)
         {
@@ -155,7 +154,7 @@
         }
 
         bool resultado =
-            await LibroService.Modificar(libro);
+            await LibrosServices.Modificar(libro);
 
         if (resultado)
         {
@@ -170,7 +169,7 @@
     private async Task Eliminar()
     {
         bool resultado =
-            await LibroService.Eliminar(LibroId);
+            await LibrosServices.Eliminar(LibroId);
 
         if (resultado)
         {

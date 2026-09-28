@@ -64,12 +64,63 @@ namespace Registro.Migrations
                     b.Property<string>("Autor")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Disponibilidad")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Titulo")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("LibroId");
 
                     b.ToTable("Libro");
+                });
+
+            modelBuilder.Entity("Registro.Models.Prestamo", b =>
+                {
+                    b.Property<int>("PrestamoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PrestamoId"));
+
+                    b.Property<int>("EstudianteId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("FechaPrestamo")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("Fechadevolucion")
+                        .HasColumnType("date");
+
+                    b.Property<int>("LibroId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PrestamoId");
+
+                    b.HasIndex("EstudianteId");
+
+                    b.HasIndex("LibroId");
+
+                    b.ToTable("Prestamos");
+                });
+
+            modelBuilder.Entity("Registro.Models.Prestamo", b =>
+                {
+                    b.HasOne("Registro.Models.Estudiante", "Estudiante")
+                        .WithMany()
+                        .HasForeignKey("EstudianteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Registro.Models.Libro", "Libro")
+                        .WithMany()
+                        .HasForeignKey("LibroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estudiante");
+
+                    b.Navigation("Libro");
                 });
 #pragma warning restore 612, 618
         }
