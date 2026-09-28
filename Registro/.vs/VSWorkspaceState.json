@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Data"
   ],
-  "SelectedNode": "\\Services",
+  "SelectedNode": "\\Registro.csproj",
   "PreviewInSolutionExplorer": false
 }

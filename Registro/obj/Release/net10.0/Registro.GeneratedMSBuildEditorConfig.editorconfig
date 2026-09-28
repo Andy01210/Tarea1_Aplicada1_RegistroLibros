@@ -35,10 +35,6 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Aplicada/Tarea1_Aplicada1_RegistroJugadores/Registro/Components/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xDb3VudGVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Aplicada/Tarea1_Aplicada1_RegistroJugadores/Registro/Components/Pages/Error.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
@@ -75,8 +71,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xOb3RGb3VuZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Aplicada/Tarea1_Aplicada1_RegistroJugadores/Registro/Components/Pages/Weather.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xXZWF0aGVyLnJhem9y
+[C:/Aplicada/Tarea1_Aplicada1_RegistroJugadores/Registro/Components/Pages/PrestamosPages/CrearPestamos.Razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcmVzdGFtb3NQYWdlc1xDcmVhclBlc3RhbW9zLlJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Aplicada/Tarea1_Aplicada1_RegistroJugadores/Registro/Components/Pages/PrestamosPages/EditarPrestamo.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcmVzdGFtb3NQYWdlc1xFZGl0YXJQcmVzdGFtby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Aplicada/Tarea1_Aplicada1_RegistroJugadores/Registro/Components/Pages/PrestamosPages/IndexPrestamos.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xQcmVzdGFtb3NQYWdlc1xJbmRleFByZXN0YW1vcy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Aplicada/Tarea1_Aplicada1_RegistroJugadores/Registro/Components/Routes.razor]
