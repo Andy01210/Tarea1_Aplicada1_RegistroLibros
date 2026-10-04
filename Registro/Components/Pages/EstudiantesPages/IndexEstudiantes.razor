@@ -247,7 +247,6 @@
                     .Contains(valorFiltro.ToLower()))
                     .ToList();
             }
-
             else if (filtro == "Email")
             {
                 ListaEstudiantes = (await EstudiantesServices.Listar())
