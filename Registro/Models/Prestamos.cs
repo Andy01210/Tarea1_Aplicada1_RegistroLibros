@@ -9,7 +9,6 @@ public class Prestamo
     public int PrestamoId{get; set;}
 
     [Required(ErrorMessage = "Debe elegir un libro")]
-
     public int LibroId{ get; set;}
 
      [Required(ErrorMessage = "Debe elegir un estudiante")]
