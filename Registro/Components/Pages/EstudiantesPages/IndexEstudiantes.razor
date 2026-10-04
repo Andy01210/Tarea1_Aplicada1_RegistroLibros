@@ -1,7 +1,6 @@
 @page "/Estudiantes"
 @rendermode InteractiveServer
 
-@inject EstudiantesServices EstudiantesServices
 @inject NavigationManager Navigation
 
 <PageTitle>Registro de Estudiantes</PageTitle>
@@ -162,7 +161,6 @@
                             <button type="button"
                                     class="btn btn-outline-danger"
                                     @onclick="() => MostrarPantallaEliminar(Estudiante.EstudianteId)">
-
                                 Eliminar
 
                             </button>
@@ -239,7 +237,6 @@
                     .Contains(valorFiltro.ToLower()))
                     .ToList();
             }
-
             else if (filtro == "Direccion")
             {
                 ListaEstudiantes = (await EstudiantesServices.Listar())
@@ -247,7 +244,6 @@
                     .Contains(valorFiltro.ToLower()))
                     .ToList();
             }
-
             else if (filtro == "Email")
             {
                 ListaEstudiantes = (await EstudiantesServices.Listar())
@@ -301,7 +297,6 @@
     {
         Navigation.NavigateTo($"/editar-estudiante/{id}");
     }
-
 
     public void MostrarPantallaEliminar(int id)
     {

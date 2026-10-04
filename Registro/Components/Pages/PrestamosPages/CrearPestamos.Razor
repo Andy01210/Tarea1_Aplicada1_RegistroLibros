@@ -1,10 +1,9 @@
 @page "/Crear-prestamos"
 
 @rendermode InteractiveServer
-
 @inject PrestamosServices PrestamosServices
 
-@inject LibroService LibroServices
+
 
 @inject EstudiantesServices EstudiantesServices
 
@@ -134,7 +133,6 @@
 
     private string mensaje = "";
 
-
     protected override async Task OnInitializedAsync(){
         ListaLibros = await LibroServices.Listar(l=> l.Disponibilidad== true);
         ListaEstudiante = await EstudiantesServices.Listar();
@@ -177,7 +175,6 @@
             libro.Disponibilidad = false;
             await LibroServices.Modificar(libro);
             Navigation.NavigateTo("/Prestamos");
-
           }
            
         }else{
@@ -190,7 +187,3 @@
         Navigation.NavigateTo("/Prestamos");
     }
 }
-
-
-
-

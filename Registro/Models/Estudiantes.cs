@@ -6,7 +6,6 @@ public class Estudiante{
 
     [Key]
     public int EstudianteId{get; set;}
-
     [Required (ErrorMessage="El nombre debe ser obligatorio")]
     public string Nombre{get; set;}
 

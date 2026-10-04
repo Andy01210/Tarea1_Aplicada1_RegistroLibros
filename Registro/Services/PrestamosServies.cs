@@ -64,11 +64,4 @@ public class PrestamosServices(IDbContextFactory<Contexto> contextFactory)
         return await contexto.Prestamos.Where(criterio).Include(p=> p.Libro).Include(p=>p.Estudiante).AsNoTracking().ToListAsync();
         
     }
-    
-    
-
-
-
-
-
 }

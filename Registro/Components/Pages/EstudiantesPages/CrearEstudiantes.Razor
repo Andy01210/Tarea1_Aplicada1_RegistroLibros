@@ -1,9 +1,6 @@
 @page "/crear-Estudiante"
-
 @rendermode InteractiveServer
-
 @inject EstudiantesServices EstudiantesServices
-
 @inject NavigationManager Navigation
 
 <PageTitle>Crear Estudiante</PageTitle>
@@ -25,7 +22,6 @@
                 <label class="form-label">
                     EstudianteId
                 </label>
-
                 <input type="number"
                        class="form-control"
                        @bind="estudianteId" />
@@ -58,7 +54,6 @@
                 <label class="form-label">
                     Email
                 </label>
-
                 <input type="text"
                        class="form-control"
                        @bind="email" />
@@ -103,11 +98,8 @@
                         @onclick="Guardar">
                     Guardar
                 </button>
-
             </div>
-
         </div>
-
     </div>
 
 </div>
@@ -115,17 +107,12 @@
 @code
 {
     private int estudianteId;
-
     private string nombre = "";
-
     private string direccion = "";
-
     private string email = "";
-
     private DateOnly fechaDeNacimiento;
-
     private string mensaje = "";
-
+    
     private async Task Guardar()
     {
         if (string.IsNullOrWhiteSpace(nombre))
@@ -133,13 +120,11 @@
             mensaje = "El nombre es obligatorio.";
             return;
         }
-
         if (string.IsNullOrWhiteSpace(direccion))
         {
             mensaje = "La direccion es obligatorio.";
             return;
         }
-
         if (string.IsNullOrWhiteSpace(email))
         {
             mensaje = "El email es obligatorio.";

@@ -2,10 +2,9 @@
 @rendermode InteractiveServer
 
 
-@inject PrestamosServices PrestamosServices
+
 
 @inject LibroService LibroServices
-
 @inject EstudiantesServices EstudiantesServices
 
 @inject NavigationManager Navigation
@@ -173,7 +172,6 @@
         ListaLibros = await LibroServices.ObtenerTodos();
         ListaEstudiante = await EstudiantesServices.Listar();
 
-
         Registro.Models.Prestamo? resultado =
        await PrestamosServices.Buscar(PrestamoId);
 
@@ -240,7 +238,6 @@
         }
     }
 
-  
     public void Volver()
     {
         Navigation.NavigateTo("/Prestamos");

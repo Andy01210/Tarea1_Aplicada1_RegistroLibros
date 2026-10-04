@@ -1,8 +1,8 @@
 @page "/Prestamos"
-@using SQLitePCL
+
 @rendermode InteractiveServer
 
-@inject PrestamosServices Prestamos
+
 @inject NavigationManager Navigation
 
 <PageTitle>Pretamos</PageTitle>
@@ -140,8 +140,7 @@
 
 
        
-
-        
+    
 
                 @code
 {
@@ -182,7 +181,6 @@
         ListaPrestamo = await Prestamos.ListarTodo();
         filtro = string.Empty;
         valorFiltro = string.Empty;
-
     }
 
     public async Task Buscar()
