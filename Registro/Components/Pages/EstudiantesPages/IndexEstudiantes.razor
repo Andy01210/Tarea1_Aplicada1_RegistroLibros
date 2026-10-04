@@ -239,7 +239,6 @@
                     .Contains(valorFiltro.ToLower()))
                     .ToList();
             }
-
             else if (filtro == "Direccion")
             {
                 ListaEstudiantes = (await EstudiantesServices.Listar())
