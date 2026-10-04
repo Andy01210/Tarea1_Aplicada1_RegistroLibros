@@ -26,7 +26,6 @@ public class Prestamo
     public DateOnly FechaPrestamo{get; set;}
 
     [Required(ErrorMessage = "Debe ingresar la fecha de ddebolucion")]
-
     public DateOnly Fechadevolucion { get; set; }
 
     
