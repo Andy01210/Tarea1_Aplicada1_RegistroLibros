@@ -112,17 +112,12 @@
 @code
 {
     private int estudianteId;
-
     private string nombre = "";
-
     private string direccion = "";
-
     private string email = "";
-
     private DateOnly fechaDeNacimiento;
-
     private string mensaje = "";
-
+    
     private async Task Guardar()
     {
         if (string.IsNullOrWhiteSpace(nombre))
