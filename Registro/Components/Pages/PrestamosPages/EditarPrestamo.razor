@@ -173,7 +173,6 @@
         ListaLibros = await LibroServices.ObtenerTodos();
         ListaEstudiante = await EstudiantesServices.Listar();
 
-
         Registro.Models.Prestamo? resultado =
        await PrestamosServices.Buscar(PrestamoId);
 
