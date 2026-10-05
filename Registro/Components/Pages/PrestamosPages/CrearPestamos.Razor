@@ -11,6 +11,7 @@
 
 <PageTitle>Crear Prestamos</PageTitle>
 
+<EditForm Model="@prestamo" OnValidSubmit="Guardar">
 <div class="container mt-4">
 
     <div class="card">
@@ -118,6 +119,7 @@
         </div>
     </div>
 </div>
+</EditForm>
 
 @code
 {
