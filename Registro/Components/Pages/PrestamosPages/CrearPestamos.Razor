@@ -95,12 +95,10 @@
                     @mensaje
                 </div>
             }
-
         </div>
 
         @*Botones*@
         <div class="card-footer">
-
             <div class="d-flex justify-content-center gap-2">
 
                 @*Volver*@
@@ -116,13 +114,9 @@
                         @onclick="Guardar">
                     Guardar
                 </button>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 @code
@@ -138,7 +132,6 @@
         ListaEstudiante = await EstudiantesServices.Listar();
     }
 
-    
     private async Task Guardar()
     {
         mensaje = "";

@@ -9,9 +9,7 @@
 <PageTitle>Crear Libro</PageTitle>
 
 <div class="container mt-4">
-
     <div class="card">
-
         @*Encabezado*@
         <div class="card-header text-center">
             <h3>Crear Libro</h3>
@@ -104,15 +102,10 @@
 @code
 {
     private int libroId;
-
     private string titulo = "";
-
     private string autor = "";
-
     private int anoPublicacion;
-
     private string mensaje = "";
-
     private async Task Guardar()
     {
         if (string.IsNullOrWhiteSpace(titulo))

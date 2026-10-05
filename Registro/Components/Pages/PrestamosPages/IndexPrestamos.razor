@@ -9,151 +9,106 @@
 
 <div class= "container">
 
-            @*Header*@
-            <div class="card-header">
-                <div class="card-title">
-                    <h3> Consultas Prestamos</h3>
+    @*Header*@
+    <div class="card shadow-lg">
+        <div class="card-header d-flex justify-content-between align-center mb-4">
+            <h5 class="card-title">Registro de Prestamos</h5>
+            <a href="/Crear-prestamos" class="btn btn-primary"> <span class="bi bi-plus-square mt-3"></span> Crear</a>
+        </div>
+
+            @*Body*@
+            <div class="card-body">
+
+                 @*Labels*@
+                <div class="row">
+                    <div class = "col-3">
+                        <label class ="form-label" for ="Filtro">
+                             <strong>Filtrar por</strong>
+                         </label>
+                    </div>
+                    <div class = "col-3">
+                        <label class ="form-label" for ="Filtro">
+                            <strong>Busqueda</strong>
+                        </label>
+                    </div>
+                    
                 </div>
 
-                @*Body*@
-                <div class="card-body">
+                @*Inputs y botones*@
+                <div class="row">
+                     @*FIltro*@
+                     <div class="col-3">
+                        <select class="form-select" @bind="filtro">
+                             <option value ="">
+                                Elija una opcion
+                            </option>
 
-                        @*Labels*@
-                        <div class="row">
+                            <option value ="">
+                                Estudiante
+                            </option>
 
-                            <div class = "col-3">
-                                <label class ="form-label" for ="Filtro">
-                                    <strong>Filtrar por</strong>
-                                </label>
-                            </div>
-
-                            <div class = "col-3">
-                                <label class ="form-label" for ="Filtro">
-                                    <strong>Busqueda</strong>
-                                </label>
-                            </div>
-                    
-                        </div>
-
-                    @*Inputs y botones*@
-                    <div class="row">
-
-                        @*FIltro*@
-                        <div class="col-3">
-                            <select class="form-select" @bind="filtro">
-                                <option value ="">
-                                    Elija una opcion
-                                </option>
-
-                                <option value ="">
-                                    Estudiante
-                                </option>
-
-                                <option value ="">
-                                    Libro
-                                </option>
+                            <option value ="">
+                                 Libro
+                            </option>
 
                             </select>
                         </div>
 
-                
+                @*Busqueda*@
+                <div class = "col-4">
+                    <div class="input-group">
 
-                    @*Busqueda*@
-                        <div class = "col-4">
-
-                            <div class="input-group">
-
-                                <input class ="form-control"
-                                    @bind="valorFiltro"
-                                    placeholder="Buscar" />
-
-                                <button type="button"
-                                            class = "btn btn-outline-primary"
-                                            @onclick="Buscar">
-
-                                        buscar
-                                    </button>
-                            </div>
-                        </div>
-
-                        @*Restablecer*@
-                        <div class = "col-auto">
-
-                            <button type="button"
-                                class = "btn btn-outline-secondary"
-                                @onclick ="Restablecer">
-                                
-                                Restablecer
-                            </button>
-                        </div>
+                        <input class ="form-control"
+                             @bind="valorFiltro"
+                            placeholder="Buscar" />
+                        <button type="button"
+                            class = "btn btn-outline-primary"
+                                 @onclick="Buscar">
+                                 buscar
+                        </button>
                     </div>
+                </div>
 
-                <div class ="mt-3"
-                     <QuickGrid  Items ="@ListaPrestamo.AsQueryable()" class ="table table-bordered" >
-                        <PropertyColumn Property="@(p => p.PrestamoId)" Title = "Prestamo id" Align = "Align.Center" Sortable="true"/>
-                        <PropertyColumn Property="@(p => p.Libro.Titulo)" Title = "Libro" Align = "Align.Center" Sortable="true"/>
-                        <PropertyColumn Property="@(p => p.Estudiante.Nombre)" Title = "Estudiante" Align = "Align.Center" Sortable="true"/>
-                        <PropertyColumn Property="@(p => p.FechaPrestamo)" Title = "Fecha del prestamo" Align = "Align.Center" Format = "dd-MM-yyy" Sortable="true"/>
-                        <PropertyColumn Property="@(p => p.Fechadevolucion)" Title = "Fecha de devolucion" Align = "Align.Center" Format = "dd-MM-yyy" Sortable="true"/>
-
-                        
-                        <TemplateColumn Title = "Acciones"Align = "Align.Center" >
-                            <div  
-                            <a href="@($"/editar-prestamo/{context.PrestamoId}")" class="btn btn-outline-warning"> Editar</a>
-                       
-                            <a href="@($"/editar-prestamo/{context.PrestamoId}")" class="btn btn-outline-danger">Eliminar</a>
-
-                            </div>
-                            
-                        </TemplateColumn>
-
-                    </QuickGrid> 
+                @*Restablecer*@
+                <div class = "col-auto">
+                    <button type="button"
+                        class = "btn btn-outline-secondary"
+                            @onclick ="Restablecer">
+                            Restablecer
+                    </button >     
                 </div>
                    
-
-                   
-
-                            <p>
-                                <strong>Cantidad: </strong> @ListaPrestamo.Count
-                            </p>
-
-
-
-                </div>
-                    
             </div>
 
-            @*Crear Prestamo*@
-           <button type="button"
-            class="btn btn-primary"
-            @onclick="MostrarPantallaCrear">
-
-        Crear Prestamo
-
-    </button>
+            <div class ="mt-3">
+                <QuickGrid  Items ="@ListaPrestamo.AsQueryable()" class ="table table-bordered" >
+                    <PropertyColumn Property="@(p => p.PrestamoId)" Title = "Prestamo id" Align = "Align.Center" Sortable="true"/>
+                    <PropertyColumn Property="@(p => p.Libro.Titulo)" Title = "Libro" Align = "Align.Center" Sortable="true"/>
+                    <PropertyColumn Property="@(p => p.Estudiante.Nombre)" Title = "Estudiante" Align = "Align.Center" Sortable="true"/>
+                    <PropertyColumn Property="@(p => p.FechaPrestamo)" Title = "Fecha del prestamo" Align = "Align.Center" Format = "dd-MM-yyy" Sortable="true"/>
+                    <PropertyColumn Property="@(p => p.Fechadevolucion)" Title = "Fecha de devolucion" Align = "Align.Center" Format = "dd-MM-yyy" Sortable="true"/>
+                    <TemplateColumn Title = "Acciones"Align = "Align.Center" >
+                        <div class="d-flex gap-2"> 
+                            <a href="@($"/editar-prestamo/{context.PrestamoId}")" class="btn btn-outline-warning"> Editar</a>
+                            <a href="@($"/editar-prestamo/{context.PrestamoId}")" class="btn btn-outline-danger">Eliminar</a>
+                        </div>   
+                    </TemplateColumn>
+                </QuickGrid> 
+            </div>
            
-</div>
-        
-
-
-
-
-
-       
-    
-
-                @code
+            <div class="card-footer d-flex justify-content-between align-center mb-4">
+                <strong>Cantidad: @ListaPrestamo.Count</strong>
+            </div>
+        </div>
+    </div>
+</div>                
+                    
+@code
 {
 
     public string? filtro{get; set;}
-
     public string? valorFiltro{get; set;}
-
-
-
-
     public List<Registro.Models.Prestamo> ListaPrestamo { get; set; } = [];
-
     protected override async Task OnInitializedAsync()
     {
         ListaPrestamo = await Prestamos.Listar(p => p.PrestamoId > 0);
