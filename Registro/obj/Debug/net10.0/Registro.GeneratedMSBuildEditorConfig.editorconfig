@@ -39,6 +39,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEZXZvbHVjaW9uZXNQYWdlc1xEZXZvbHVjaW9uSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Aplicada/Tarea1_Aplicada1_RegistroJugadores/Registro/Components/Pages/DevolucionesPages/FormDevolucion.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEZXZvbHVjaW9uZXNQYWdlc1xGb3JtRGV2b2x1Y2lvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Aplicada/Tarea1_Aplicada1_RegistroJugadores/Registro/Components/Pages/DevolucionesPages/PgPrestamosDevolucion.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEZXZvbHVjaW9uZXNQYWdlc1xQZ1ByZXN0YW1vc0Rldm9sdWNpb24ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Aplicada/Tarea1_Aplicada1_RegistroJugadores/Registro/Components/Pages/Error.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 

@@ -16,6 +16,11 @@ public class DevolucionesServices(IDbContextFactory<Contexto> contextFactory)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
         contexto.Devoluciones.Add(devolucion);
+        var prestamo = await contexto.Prestamos.FindAsync(devolucion.PrestamoId);
+        if (prestamo != null)
+        {
+            prestamo.Devuelto = true; 
+        }
         return await contexto.SaveChangesAsync() > 0;
     }
 
@@ -60,7 +65,10 @@ public class DevolucionesServices(IDbContextFactory<Contexto> contextFactory)
     public async Task<List<Devolucion>> Listar(Expression<Func<Devolucion, bool>> criterio)
     {
         await using var contexto = await contextFactory.CreateDbContextAsync();
-        return await contexto.Devoluciones.Where(criterio).Include(p=> p.prestamo.Estudiante).Include(p=>p.prestamo.Libro).AsNoTracking().ToListAsync();
+        return await contexto.Devoluciones.Where(criterio).
+        Include(p=> p.prestamo.Estudiante).
+        Include(p=>p.prestamo.Libro).
+        Include(p=>p.prestamo).AsNoTracking().ToListAsync();
         
     }
 }

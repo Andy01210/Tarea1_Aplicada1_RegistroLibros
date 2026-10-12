@@ -87,6 +87,7 @@
                     <PropertyColumn Property="@(p => p.Estudiante.Nombre)" Title = "Estudiante" Align = "Align.Center" Sortable="true"/>
                     <PropertyColumn Property="@(p => p.FechaPrestamo)" Title = "Fecha del prestamo" Align = "Align.Center" Format = "dd-MM-yyy" Sortable="true"/>
                     <PropertyColumn Property="@(p => p.Fechadevolucion)" Title = "Fecha de devolucion" Align = "Align.Center" Format = "dd-MM-yyy" Sortable="true"/>
+                    <PropertyColumn Property="@(p => p.Devuelto)" Title = "Prestamo devuelto" Align = "Align.Center"  Sortable="true"/>
                     <TemplateColumn Title = "Acciones"Align = "Align.Center" >
                         <div class="d-flex gap-2"> 
                             <a href="@($"/editar-prestamo/{context.PrestamoId}")" class="btn btn-outline-warning"> Editar</a>
@@ -150,9 +151,6 @@
                 {
                     ListaPrestamo = await Prestamos.Listar(p => p.Libro.Titulo.ToLower().Contains(valorFiltro.ToLower()));
                 }
-
-
-
         }
     }
 

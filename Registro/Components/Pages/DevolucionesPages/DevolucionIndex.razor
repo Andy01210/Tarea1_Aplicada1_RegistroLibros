@@ -6,7 +6,7 @@
 
 @inject NavigationManager Navigation
 
-<PageTitle>Pretamos</PageTitle>
+<PageTitle>Devoluciones</PageTitle>
 
 <div class= "container">
 
@@ -14,7 +14,7 @@
     <div class="card shadow-lg">
         <div class="card-header d-flex justify-content-between align-center mb-4">
             <h5 class="card-title">Registro de Devoluciones</h5>
-            <a href="/Crear-prestamos" class="btn btn-primary"> <span class="bi bi-plus-square mt-3"></span> Crear</a>
+            <a href="/PrestamosDevolucion" class="btn btn-primary"> <span class="bi bi-plus-square mt-3"></span> Devolver prestamo</a>
         </div>
 
             @*Body*@
@@ -84,14 +84,19 @@
             <div class ="mt-3">
                 <QuickGrid Items="@listaDevoluciones.AsQueryable()" class = "table table-bordered">
                     <PropertyColumn Property="@(d => d.DevolucionId)"Title = "Devolucion Id" Align="Align.Center"></PropertyColumn>
-                    <PropertyColumn Property="@(d => d.prestamo.Estudiante.Nombre)"Title = "Estuiante" Align="Align.Center"></PropertyColumn>
-                    <PropertyColumn Property="@(d => d.prestamo.Libro.Titulo)"Title = "Titulo" Align="Align.Center"></PropertyColumn>
+                    <TemplateColumn Title="Estudiante" Align="Align.Center">
+                        @(context.prestamo?.Estudiante?.Nombre ?? "Sin estudiante")
+                    </TemplateColumn>
+
+                    <TemplateColumn Title="Título" Align="Align.Center">
+                        @(context.prestamo?.Libro?.Titulo ?? "Sin título")
+                    </TemplateColumn>
                     <PropertyColumn Property="@(d => d.FechaPrestamo)"Title = "Fecha prestamo" Align="Align.Center"></PropertyColumn>
                     <PropertyColumn Property="@(d => d.FechaDevolucion)"Title = "Fecha de devolucion" Align="Align.Center"></PropertyColumn>
 
                     <div>
                         <TemplateColumn Title="Acciones" Align="Align.Center">
-                            <a class="btn btn-outline-danger"></a>
+                            <a class="btn btn-outline-danger "@onclick="() => Eliminar(context.DevolucionId)">Eliminar</a>
                         </TemplateColumn>
                     </div>
 
@@ -100,7 +105,8 @@
             </div>
            
             <div class="card-footer d-flex justify-content-between align-center mb-4">
-                <strong>Cantidad: </strong>
+                <strong>Cantidad:@listaDevoluciones.Count </strong>
+                <strong>Promedio:@promedioDias</strong>
             </div>
         </div>
     </div>
@@ -112,7 +118,16 @@
     public string? filtro{get; set;}
     public string? valorFiltro{get; set;}
 
+    public double promedioDias = 0;
+
     public List<Devolucion> listaDevoluciones = new List<Devolucion>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaDevoluciones = await DevolucionesServices.Listar(p => p.DevolucionId > 0);
+        CalcularPromedio();
+    }
 
     public async Task Buscar()
     {
@@ -125,10 +140,15 @@
 
             if(filtro == "Libro")
             {
-                 listaDevoluciones = await DevolucionesServices.Listar(p =>p.prestamo.Libro.Titulo.ToLower().Contains(valorFiltro.ToLower()));
+                listaDevoluciones = await DevolucionesServices.Listar(p =>p.prestamo.Libro.Titulo.ToLower().Contains(valorFiltro.ToLower()));
             }
         }
     }
+
+    public async Task Eliminar(int devolucionId){
+    await DevolucionesServices.Eliminar(devolucionId);
+    listaDevoluciones = await DevolucionesServices.Listar(p => p.DevolucionId > 0);
+}
 
     public async Task Restablecer()
     {
@@ -136,5 +156,21 @@
         valorFiltro = string.Empty;
         listaDevoluciones = await DevolucionesServices.ListarTodo();
     }
+
+  
+public void CalcularPromedio()
+{
+    if (listaDevoluciones.Count == 0){
+        promedioDias = 0;
+        return;
+    }
+    int acumuladorDias = 0;
+    foreach (var devolucion in listaDevoluciones)
+    {
+        int diasPrestamo = devolucion.FechaDevolucion.DayNumber - devolucion.FechaPrestamo.DayNumber;
+        acumuladorDias += diasPrestamo;
+    }
+    promedioDias = (double)acumuladorDias / listaDevoluciones.Count;
+}
 
 }

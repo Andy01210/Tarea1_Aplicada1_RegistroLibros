@@ -5,25 +5,25 @@
 namespace Registro.Migrations
 {
     /// <inheritdoc />
-    public partial class devoluciones : Migration
+    public partial class Inicial5 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "Cantidad",
-                table: "Libro",
-                type: "int",
+            migrationBuilder.AddColumn<bool>(
+                name: "Devuelto",
+                table: "Prestamos",
+                type: "bit",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: false);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Cantidad",
-                table: "Libro");
+                name: "Devuelto",
+                table: "Prestamos");
         }
     }
 }

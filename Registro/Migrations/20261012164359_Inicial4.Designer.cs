@@ -12,8 +12,8 @@ using Registro.Context;
 namespace Registro.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20261011220903_devoluciones")]
-    partial class devoluciones
+    [Migration("20261012164359_Inicial4")]
+    partial class Inicial4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,40 @@ namespace Registro.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Registro.Models.Devolucion", b =>
+                {
+                    b.Property<int>("DevolucionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DevolucionId"));
+
+                    b.Property<int>("EstudianteId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("FechaDevolucion")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("FechaPrestamo")
+                        .HasColumnType("date");
+
+                    b.Property<int>("LibroId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PrestamoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DevolucionId");
+
+                    b.HasIndex("EstudianteId");
+
+                    b.HasIndex("LibroId");
+
+                    b.HasIndex("PrestamoId");
+
+                    b.ToTable("Devoluciones");
+                });
 
             modelBuilder.Entity("Registro.Models.Estudiante", b =>
                 {
@@ -108,6 +142,33 @@ namespace Registro.Migrations
                     b.HasIndex("LibroId");
 
                     b.ToTable("Prestamos");
+                });
+
+            modelBuilder.Entity("Registro.Models.Devolucion", b =>
+                {
+                    b.HasOne("Registro.Models.Estudiante", "Estudiante")
+                        .WithMany()
+                        .HasForeignKey("EstudianteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Registro.Models.Libro", "Libro")
+                        .WithMany()
+                        .HasForeignKey("LibroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Registro.Models.Prestamo", "prestamo")
+                        .WithMany()
+                        .HasForeignKey("PrestamoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estudiante");
+
+                    b.Navigation("Libro");
+
+                    b.Navigation("prestamo");
                 });
 
             modelBuilder.Entity("Registro.Models.Prestamo", b =>

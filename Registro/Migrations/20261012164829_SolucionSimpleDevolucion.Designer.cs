@@ -12,8 +12,8 @@ using Registro.Context;
 namespace Registro.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20260927143854_Update4")]
-    partial class Update4
+    [Migration("20261012164829_SolucionSimpleDevolucion")]
+    partial class SolucionSimpleDevolucion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,30 @@ namespace Registro.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Registro.Models.Devolucion", b =>
+                {
+                    b.Property<int>("DevolucionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DevolucionId"));
+
+                    b.Property<DateOnly>("FechaDevolucion")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("FechaPrestamo")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PrestamoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DevolucionId");
+
+                    b.HasIndex("PrestamoId");
+
+                    b.ToTable("Devoluciones");
+                });
 
             modelBuilder.Entity("Registro.Models.Estudiante", b =>
                 {
@@ -67,6 +91,9 @@ namespace Registro.Migrations
                     b.Property<string>("Autor")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Disponibilidad")
                         .HasColumnType("bit");
 
@@ -78,7 +105,7 @@ namespace Registro.Migrations
                     b.ToTable("Libro");
                 });
 
-            modelBuilder.Entity("Registro.Models.Prestamos", b =>
+            modelBuilder.Entity("Registro.Models.Prestamo", b =>
                 {
                     b.Property<int>("PrestamoId")
                         .ValueGeneratedOnAdd()
@@ -107,7 +134,18 @@ namespace Registro.Migrations
                     b.ToTable("Prestamos");
                 });
 
-            modelBuilder.Entity("Registro.Models.Prestamos", b =>
+            modelBuilder.Entity("Registro.Models.Devolucion", b =>
+                {
+                    b.HasOne("Registro.Models.Prestamo", "prestamo")
+                        .WithMany()
+                        .HasForeignKey("PrestamoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("prestamo");
+                });
+
+            modelBuilder.Entity("Registro.Models.Prestamo", b =>
                 {
                     b.HasOne("Registro.Models.Estudiante", "Estudiante")
                         .WithMany()
