@@ -5,7 +5,7 @@
 
 <PageTitle>Crear Estudiante</PageTitle>
 
-<EditForm Model="@estudiante" OnValidSubmit="Guardar">
+<EditForm Model="@estudiante">
 <div class="container mt-4">
 
     <div class="card">
@@ -25,7 +25,7 @@
                 </label>
                 <input type="number"
                        class="form-control"
-                       @bind="estudianteId" />
+                       @bind="estudiante.EstudianteId" />
             </div>
 
             @*Nombre*@
@@ -33,10 +33,9 @@
                 <label class="form-label">
                     Nombre
                 </label>
-
                 <input type="text"
                        class="form-control"
-                       @bind="nombre" />
+                       @bind="estudiante.Nombre" />
             </div>
 
             @*Direccion*@
@@ -44,10 +43,9 @@
                 <label class="form-label">
                     Direccion
                 </label>
-
                 <input type="text"
                        class="form-control"
-                       @bind="direccion" />
+                       @bind="estudiante.Direccion" />
             </div>
 
             @*Email*@
@@ -57,7 +55,7 @@
                 </label>
                 <input type="text"
                        class="form-control"
-                       @bind="email" />
+                       @bind="estudiante.Email" />
             </div>
 
              @*Fecha de nacimiento*@
@@ -65,10 +63,9 @@
                 <label class="form-label">
                     FechaDeNacimiento
                 </label>
-
                 <input type="date"
                        class="form-control"
-                       @bind="fechaDeNacimiento" />
+                       @bind="estudiante.FechaDeNacimiento" />
             </div>
 
             @*Mensaje*@
@@ -83,7 +80,6 @@
 
         @*Botones*@
         <div class="card-footer">
-
             <div class="d-flex justify-content-center gap-2">
 
                 @*Volver*@
@@ -106,49 +102,34 @@
 </div>
 </EditForm>
 
-@code
-{
-    private int estudianteId;
-    private string nombre = "";
-    private string direccion = "";
-    private string email = "";
-    private DateOnly fechaDeNacimiento;
+@code {
+    private Estudiante estudiante = new();
     private string mensaje = "";
-    
+
     private async Task Guardar()
     {
-        if (string.IsNullOrWhiteSpace(nombre))
+        if (string.IsNullOrWhiteSpace(estudiante.Nombre))
         {
             mensaje = "El nombre es obligatorio.";
             return;
         }
-        if (string.IsNullOrWhiteSpace(direccion))
+        if (string.IsNullOrWhiteSpace(estudiante.Direccion))
         {
-            mensaje = "La direccion es obligatorio.";
+            mensaje = "La direccion es obligatoria.";
             return;
         }
-        if (string.IsNullOrWhiteSpace(email))
+        if (string.IsNullOrWhiteSpace(estudiante.Email))
         {
             mensaje = "El email es obligatorio.";
             return;
         }
-         if (fechaDeNacimiento == default)
+        if (estudiante.FechaDeNacimiento == default)
         {
             mensaje = "La fecha debe ser obligatoria.";
             return;
         }
 
-        Registro.Models.Estudiante Estudiante =
-            new Registro.Models.Estudiante
-            {
-                Nombre = nombre,
-                Direccion = direccion,
-                Email = email,
-                FechaDeNacimiento = fechaDeNacimiento
-            };
-
-        bool resultado =
-            await EstudiantesServices.Guardar(Estudiante);
+        bool resultado = await EstudiantesServices.Guardar(estudiante);
 
         if (resultado)
         {

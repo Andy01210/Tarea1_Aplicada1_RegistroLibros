@@ -1,0 +1,140 @@
+@page "/Devoluciones"
+@using SQLitePCL
+
+@rendermode InteractiveServer
+
+
+@inject NavigationManager Navigation
+
+<PageTitle>Pretamos</PageTitle>
+
+<div class= "container">
+
+    @*Header*@
+    <div class="card shadow-lg">
+        <div class="card-header d-flex justify-content-between align-center mb-4">
+            <h5 class="card-title">Registro de Devoluciones</h5>
+            <a href="/Crear-prestamos" class="btn btn-primary"> <span class="bi bi-plus-square mt-3"></span> Crear</a>
+        </div>
+
+            @*Body*@
+            <div class="card-body">
+
+                 @*Labels*@
+                <div class="row">
+                    <div class = "col-3">
+                        <label class ="form-label" for ="Filtro">
+                             <strong>Filtrar por</strong>
+                         </label>
+                    </div>
+                    <div class = "col-3">
+                        <label class ="form-label" for ="Filtro">
+                            <strong>Busqueda</strong>
+                        </label>
+                    </div>
+                    
+                </div>
+
+                @*Inputs y botones*@
+                <div class="row">
+                     @*FIltro*@
+                     <div class="col-3">
+                        <select class="form-select" @bind="filtro">
+                             <option value ="">
+                                Elija una opcion
+                            </option>
+
+                            <option value ="">
+                                Estudiante
+                            </option>
+
+                            <option value ="">
+                                 Libro
+                            </option>
+
+                            </select>
+                        </div>
+
+                @*Busqueda*@
+                <div class = "col-4">
+                    <div class="input-group">
+
+                        <input class ="form-control"
+                             @bind="valorFiltro"
+                            placeholder="Buscar" />
+                        <button type="button"
+                            class = "btn btn-outline-primary"
+                                 @onclick="Buscar">
+                                 buscar
+                        </button>
+                    </div>
+                </div>
+
+                @*Restablecer*@
+                <div class = "col-auto">
+                    <button type="button"
+                        class = "btn btn-outline-secondary"
+                            @onclick ="Restablecer">
+                            Restablecer
+                    </button >     
+                </div>
+                   
+            </div>
+
+            <div class ="mt-3">
+                <QuickGrid Items="@listaDevoluciones.AsQueryable()" class = "table table-bordered">
+                    <PropertyColumn Property="@(d => d.DevolucionId)"Title = "Devolucion Id" Align="Align.Center"></PropertyColumn>
+                    <PropertyColumn Property="@(d => d.prestamo.Estudiante.Nombre)"Title = "Estuiante" Align="Align.Center"></PropertyColumn>
+                    <PropertyColumn Property="@(d => d.prestamo.Libro.Titulo)"Title = "Titulo" Align="Align.Center"></PropertyColumn>
+                    <PropertyColumn Property="@(d => d.FechaPrestamo)"Title = "Fecha prestamo" Align="Align.Center"></PropertyColumn>
+                    <PropertyColumn Property="@(d => d.FechaDevolucion)"Title = "Fecha de devolucion" Align="Align.Center"></PropertyColumn>
+
+                    <div>
+                        <TemplateColumn Title="Acciones" Align="Align.Center">
+                            <a class="btn btn-outline-danger"></a>
+                        </TemplateColumn>
+                    </div>
+
+                </QuickGrid>
+               
+            </div>
+           
+            <div class="card-footer d-flex justify-content-between align-center mb-4">
+                <strong>Cantidad: </strong>
+            </div>
+        </div>
+    </div>
+</div>                
+                    
+@code
+{
+
+    public string? filtro{get; set;}
+    public string? valorFiltro{get; set;}
+
+    public List<Devolucion> listaDevoluciones = new List<Devolucion>();
+
+    public async Task Buscar()
+    {
+        if(valorFiltro.Trim() != null)
+        {
+            if(filtro == "Estudiante")
+            {
+                listaDevoluciones = await DevolucionesServices.Listar(p =>p.prestamo.Estudiante.Nombre.ToLower().Contains(valorFiltro.ToLower()));
+            }
+
+            if(filtro == "Libro")
+            {
+                 listaDevoluciones = await DevolucionesServices.Listar(p =>p.prestamo.Libro.Titulo.ToLower().Contains(valorFiltro.ToLower()));
+            }
+        }
+    }
+
+    public async Task Restablecer()
+    {
+        filtro = string.Empty;
+        valorFiltro = string.Empty;
+        listaDevoluciones = await DevolucionesServices.ListarTodo();
+    }
+
+}

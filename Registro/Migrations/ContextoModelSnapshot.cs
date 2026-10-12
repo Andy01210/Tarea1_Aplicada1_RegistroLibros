@@ -64,6 +64,9 @@ namespace Registro.Migrations
                     b.Property<string>("Autor")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Disponibilidad")
                         .HasColumnType("bit");
 

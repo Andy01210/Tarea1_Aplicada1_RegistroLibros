@@ -169,8 +169,10 @@
           if(libro != null){
             libro.Disponibilidad = false;
             await LibroServices.Modificar(libro);
-            Navigation.NavigateTo("/Prestamos");
+            ListaLibros = await LibroServices.Listar(l=> l.Disponibilidad== true);
           }
+
+            Navigation.NavigateTo("/Prestamos");
            
         }else{
             mensaje = "Ocurrio un error al guardar el prestamo";
