@@ -14,6 +14,7 @@ builder.Services.AddDbContextFactory<Contexto> ( o => o.UseSqlServer(ConStr));
 builder.Services.AddScoped<LibroService>();
 builder.Services.AddScoped<EstudiantesServices>();
 builder.Services.AddScoped<PrestamosServices>();
+builder.Services.AddScoped<DevolucionesServices>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

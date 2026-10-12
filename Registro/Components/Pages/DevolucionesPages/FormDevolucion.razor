@@ -1,0 +1,183 @@
+@page "/devolver-prestamo/{PrestamoId:int}"
+@rendermode InteractiveServer
+
+
+
+
+@inject LibroService LibroServices
+@inject EstudiantesServices EstudiantesServices
+
+@inject NavigationManager Navigation
+
+<PageTitle>Formula de devolcuion</PageTitle>
+
+
+
+ <EditForm Model="@devolucion" OnValidSubmit="Guardar" FormName="FormDevolucion">
+<div class="container mt-4">
+
+    <div class="card">
+
+        @*Encabezado*@
+        <div class="card-header text-center">
+            <h3>Editar Prestamo</h3>
+        </div>
+
+       
+        @*Formulario*@
+        <div class="card-body">
+
+         <div class = "mb-3">
+            <label class = "form-lane">
+                Devoluccion Id
+            </label>
+
+            <InputNumber class = "form-control"
+                            @bind-Value="devolucion.DevolucionId"
+                            readonly>
+            </InputNumber>
+
+         </div>
+            
+            @*fechaPrestamo*@
+            <div class="mb-3">
+                <label class="form-label">
+                    Fecha Prestamo
+                </label>
+
+                <input type="date"
+                       class="form-control"
+                       @bind="devolucion.FechaPrestamo" />
+            </div>
+
+                
+             @*fechaDevolucion*@
+            <div class="mb-3">
+                <label class="form-label">
+                    Fecha Devolcuion
+                </label>
+
+                <input type="date"
+                       class="form-control"
+                       @bind="devolucion.FechaDevolucion" />
+            </div>
+
+            @*Mensaje*@
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <div class="alert alert-danger">
+                    @mensaje
+                </div>
+            }
+
+        </div>
+
+        @*Botones*@
+        <div class="card-footer">
+
+            <div class="d-flex justify-content-center gap-2">
+
+                @*Volver*@
+                <button type="button"
+                        class="btn btn-secondary"
+                        @onclick="Volver">
+                    Volver
+                </button>
+
+                @*Modificar*@
+                <button type="submit"
+                        class="btn btn-success">
+                    Guardar
+                </button>
+
+               
+            </div>
+        </div>
+     
+
+    </div>
+
+</div>
+ </EditForm>
+
+
+
+
+
+@code
+{
+     [Parameter]
+    public int PrestamoId{get; set;}
+    private Devolucion devolucion{get; set;} = new Devolucion();
+    private Prestamo prestamo {get; set;}= new Prestamo();
+
+   
+    private List<Libro> ListaLibros = new List<Libro>();
+    private List<Estudiante> ListaEstudiante = new List<Estudiante>();
+
+    private string mensaje = "";
+
+
+    protected override async Task OnInitializedAsync(){
+        ListaLibros = await LibroServices.ObtenerTodos();
+        ListaEstudiante = await EstudiantesServices.Listar();
+
+        Registro.Models.Prestamo? resultado =
+       await PrestamosServices.Buscar(PrestamoId);
+
+        if (resultado != null)
+        {devolucion.PrestamoId = resultado.PrestamoId;
+        devolucion.prestamo = resultado;
+        devolucion.FechaPrestamo = resultado.FechaPrestamo;
+        }
+        else
+        {
+            mensaje = "No se encontró el estudiante.";
+        }
+    }
+
+
+    private async Task Guardar()
+    {
+        mensaje = "";
+
+        if(devolucion.prestamo == null){
+            mensaje = "No hay prestamo para devolver";
+            return;
+        }
+        if(devolucion.prestamo.LibroId == 0){
+            mensaje = "No ha seleccionado ningun libro";
+            return;
+        }
+        if(devolucion.prestamo.EstudianteId == 0){
+            mensaje = "No ha seleccionado un estudiane";
+            return;
+        }
+        if(devolucion.FechaPrestamo == default){
+            mensaje = "No ha ingresado ninguna fecha de prestamo";
+            return;
+        }
+        if(devolucion.FechaDevolucion == default){
+            mensaje = "No ha ingresado ninguna fecha e devolucion";
+            return;
+        }
+        if(devolucion.FechaPrestamo > devolucion.FechaDevolucion){
+            mensaje = "La fecha del prestamo no puede ser mayor que la fecha de devolucion";
+            return;
+
+        }
+        devolucion.prestamo = null;
+        bool guardado= await DevolucionesServices.Guardar(devolucion);
+
+        if(guardado){
+            Navigation.NavigateTo("/Devoluciones");
+        }else{
+            mensaje = "Ocurrio un error al modificar el prestamo";
+        }
+    }
+
+    public void Volver()
+    {
+        Navigation.NavigateTo("/Devoluciones");
+    }
+}

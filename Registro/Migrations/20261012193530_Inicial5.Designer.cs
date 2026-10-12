@@ -12,8 +12,8 @@ using Registro.Context;
 namespace Registro.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20260927043405_DatabaseUpdate")]
-    partial class DatabaseUpdate
+    [Migration("20261012193530_Inicial5")]
+    partial class Inicial5
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,30 @@ namespace Registro.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Registro.Models.Devolucion", b =>
+                {
+                    b.Property<int>("DevolucionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DevolucionId"));
+
+                    b.Property<DateOnly>("FechaDevolucion")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("FechaPrestamo")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PrestamoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DevolucionId");
+
+                    b.HasIndex("PrestamoId");
+
+                    b.ToTable("Devoluciones");
+                });
 
             modelBuilder.Entity("Registro.Models.Estudiante", b =>
                 {
@@ -67,6 +91,9 @@ namespace Registro.Migrations
                     b.Property<string>("Autor")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Disponibilidad")
                         .HasColumnType("bit");
 
@@ -78,7 +105,7 @@ namespace Registro.Migrations
                     b.ToTable("Libro");
                 });
 
-            modelBuilder.Entity("Registro.Models.Prestamos", b =>
+            modelBuilder.Entity("Registro.Models.Prestamo", b =>
                 {
                     b.Property<int>("PrestamoId")
                         .ValueGeneratedOnAdd()
@@ -86,7 +113,10 @@ namespace Registro.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PrestamoId"));
 
-                    b.Property<int>("EstuianteId")
+                    b.Property<bool>("Devuelto")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("EstudianteId")
                         .HasColumnType("int");
 
                     b.Property<DateOnly>("FechaPrestamo")
@@ -100,7 +130,41 @@ namespace Registro.Migrations
 
                     b.HasKey("PrestamoId");
 
+                    b.HasIndex("EstudianteId");
+
+                    b.HasIndex("LibroId");
+
                     b.ToTable("Prestamos");
+                });
+
+            modelBuilder.Entity("Registro.Models.Devolucion", b =>
+                {
+                    b.HasOne("Registro.Models.Prestamo", "prestamo")
+                        .WithMany()
+                        .HasForeignKey("PrestamoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("prestamo");
+                });
+
+            modelBuilder.Entity("Registro.Models.Prestamo", b =>
+                {
+                    b.HasOne("Registro.Models.Estudiante", "Estudiante")
+                        .WithMany()
+                        .HasForeignKey("EstudianteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Registro.Models.Libro", "Libro")
+                        .WithMany()
+                        .HasForeignKey("LibroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Estudiante");
+
+                    b.Navigation("Libro");
                 });
 #pragma warning restore 612, 618
         }

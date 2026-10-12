@@ -63,7 +63,7 @@ public class LibroService(IDbContextFactory<Contexto> DbFactory)
     public async Task<List<Libro>> Listar(Expression<Func<Libro, bool>>criterio)
     {
         await using var Contexto = await DbFactory.CreateDbContextAsync();
-        return await Contexto.Libro.AsNoTracking().ToListAsync();
+        return await Contexto.Libro.AsNoTracking().Where(criterio).ToListAsync();
         
     }
 

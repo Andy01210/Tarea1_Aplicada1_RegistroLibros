@@ -1,0 +1,138 @@
+@page "/PrestamosDevolucion"
+
+@rendermode InteractiveServer
+
+
+@inject NavigationManager Navigation
+
+<PageTitle>Prestamos a devolver</PageTitle>
+
+<div class= "container">
+
+    @*Header*@
+    <div class="card shadow-lg">
+        <div class="card-header d-flex justify-content-between align-center mb-4">
+            <h5 class="card-title">Registro de Prestamos</h5>
+        </div>
+
+            @*Body*@
+            <div class="card-body">
+
+                 @*Labels*@
+                <div class="row">
+                    <div class = "col-3">
+                        <label class ="form-label" for ="Filtro">
+                             <strong>Filtrar por</strong>
+                         </label>
+                    </div>
+                    <div class = "col-3">
+                        <label class ="form-label" for ="Filtro">
+                            <strong>Busqueda</strong>
+                        </label>
+                    </div>
+                    
+                </div>
+
+                @*Inputs y botones*@
+                <div class="row">
+                     @*FIltro*@
+                     <div class="col-3">
+                        <select class="form-select" @bind="filtro">
+                             <option value ="">
+                                Elija una opcion
+                            </option>
+
+                            <option value ="">
+                                Estudiante
+                            </option>
+
+                            <option value ="">
+                                 Libro
+                            </option>
+
+                            </select>
+                        </div>
+
+                @*Busqueda*@
+                <div class = "col-4">
+                    <div class="input-group">
+
+                        <input class ="form-control"
+                             @bind="valorFiltro"
+                            placeholder="Buscar" />
+                        <button type="button"
+                            class = "btn btn-outline-primary"
+                                 @onclick="Buscar">
+                                 buscar
+                        </button>
+                    </div>
+                </div>
+
+                @*Restablecer*@
+                <div class = "col-auto">
+                    <button type="button"
+                        class = "btn btn-outline-secondary"
+                            @onclick ="Restablecer">
+                            Restablecer
+                    </button >     
+                </div>
+                   
+            </div>
+
+            <div class ="mt-3">
+                <QuickGrid  Items ="@ListaPrestamo.AsQueryable()" class ="table table-bordered" >
+                    <PropertyColumn Property="@(p => p.PrestamoId)" Title = "Prestamo id" Align = "Align.Center" Sortable="true"/>
+                    <PropertyColumn Property="@(p => p.Libro.Titulo)" Title = "Libro" Align = "Align.Center" Sortable="true"/>
+                    <PropertyColumn Property="@(p => p.Estudiante.Nombre)" Title = "Estudiante" Align = "Align.Center" Sortable="true"/>
+                    <PropertyColumn Property="@(p => p.FechaPrestamo)" Title = "Fecha del prestamo" Align = "Align.Center" Format = "dd-MM-yyy" Sortable="true"/>
+                    <TemplateColumn Title = "Acciones"Align = "Align.Center" >
+                        <div class="d-flex gap-2"> 
+                            <a href="@($"/devolver-prestamo/{context.PrestamoId}")" class="btn btn-outline-success"> Devolver</a>
+                        </div>   
+                    </TemplateColumn>
+                </QuickGrid> 
+            </div>
+           
+            <div class="card-footer d-flex justify-content-between align-center mb-4">
+                <strong>Cantidad: @ListaPrestamo.Count</strong>
+            </div>
+        </div>
+    </div>
+</div>                
+                    
+@code
+{
+
+    public string? filtro{get; set;}
+    public string? valorFiltro{get; set;}
+    public List<Registro.Models.Prestamo> ListaPrestamo { get; set; } = [];
+    protected override async Task OnInitializedAsync()
+    {
+        ListaPrestamo = await Prestamos.Listar(p => p.PrestamoId > 0);
+    }
+
+   
+
+    public async Task Restablecer()
+    {
+        ListaPrestamo = await Prestamos.ListarTodo();
+        filtro = string.Empty;
+        valorFiltro = string.Empty;
+    }
+
+    public async Task Buscar()
+        {
+            if(valorFiltro.Trim() != "")
+            {
+                if(filtro == "Estudiante")
+                {
+                    ListaPrestamo = await Prestamos.Listar(p => p.Estudiante.Nombre.ToLower().Contains(valorFiltro.ToLower()));
+                }
+                if(filtro == "Libro")
+                {
+                    ListaPrestamo = await Prestamos.Listar(p => p.Libro.Titulo.ToLower().Contains(valorFiltro.ToLower()));
+                }
+        }
+    }
+
+}

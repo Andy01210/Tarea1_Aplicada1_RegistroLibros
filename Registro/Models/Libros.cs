@@ -12,4 +12,6 @@ public int AnoPublicacion{get; set;}
 
 public bool Disponibilidad{get; set;} = true;
 
+public int Cantidad{get; set;}
+
 }

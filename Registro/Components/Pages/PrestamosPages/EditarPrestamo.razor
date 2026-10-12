@@ -11,6 +11,9 @@
 
 <PageTitle>Editar prestamo</PageTitle>
 
+
+
+ <EditForm Model="@prestamo" OnValidSubmit="Modificar">
 <div class="container mt-4">
 
     <div class="card">
@@ -20,6 +23,7 @@
             <h3>Editar Prestamo</h3>
         </div>
 
+       
         @*Formulario*@
         <div class="card-body">
 
@@ -110,24 +114,23 @@
                 </button>
 
                 @*Modificar*@
-                <button type="button"
-                        class="btn btn-primary"
-                        @onclick="Modificar">
+                <button type="submit"
+                        class="btn btn-primary">
                     Modificar
                 </button>
 
                  @*Eliminar*@
-                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Eliminar
                     </button>
             </div>
-
         </div>
+     
 
     </div>
 
 </div>
-
+ </EditForm>
 
 
 
@@ -243,7 +246,5 @@
         Navigation.NavigateTo("/Prestamos");
     }
 }
-
-
 
 
